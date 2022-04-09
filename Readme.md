@@ -96,3 +96,5 @@ The end result being that a `SortResult` control is included but not a
 Server does not actually support the VLV control. This is despite the server
 returning the control as supported when querying for the list of supported
 controls.
+
+This seems to be confirmed by https://issues.apache.org/jira/browse/DIRSERVER-1265
