@@ -42,3 +42,5 @@ docker run --rm \
   apacheds-bootstrap
 
 docker build -t apacheds -f Dockerfile.final .
+
+# TODO: tag for GitHub registry and push to registry
