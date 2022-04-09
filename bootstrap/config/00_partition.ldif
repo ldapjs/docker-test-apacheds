@@ -1,0 +1,37 @@
+# https://unix.stackexchange.com/a/577250
+
+dn: ads-partitionId=planetexpress,ou=partitions,ads-directoryServiceId=default,ou=config
+objectclass: top
+objectClass: ads-base
+objectclass: ads-partition
+objectclass: ads-jdbmPartition
+ads-partitionSuffix: dc=planetexpress,dc=com
+ads-contextentry:: ZG46IGRjPXBsYW5ldGV4cHJlc3MsZGM9Y29tCmRjOiBwbGFuZXRleHByZXNzCm9iamVjdGNsYXNzOiBkb21haW4Kb2JqZWN0Y2xhc3M6IHRvcA==
+ads-jdbmpartitionoptimizerenabled: TRUE
+ads-partitioncachesize: 10000
+ads-partitionsynconwrite: TRUE
+ads-partitionid: planetexpress
+ads-enabled: TRUE
+
+dn: ou=indexes,ads-partitionId=planetexpress,ou=partitions,ads-directoryServiceId=default,ou=config
+objectclass: top
+objectclass: organizationalUnit
+ou: indexes
+
+dn: ads-indexAttributeId=uid,ou=indexes,ads-partitionId=planetexpress,ou=partitions,ads-directoryServiceId=default,ou=config
+objectclass: top
+objectclass: ads-base
+objectclass: ads-index
+objectclass: ads-jdbmIndex
+ads-indexAttributeId: uid
+ads-enabled: TRUE
+ads-indexhasreverse: FALSE
+
+dn: ads-indexAttributeId=dc,ou=indexes,ads-partitionId=planetexpress,ou=partitions,ads-directoryServiceId=default,ou=config
+objectclass: top
+objectclass: ads-base
+objectclass: ads-index
+objectclass: ads-jdbmIndex
+ads-indexAttributeId: dc
+ads-enabled: TRUE
+ads-indexhasreverse: FALSE

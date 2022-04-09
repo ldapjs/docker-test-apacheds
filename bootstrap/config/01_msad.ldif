@@ -1,0 +1,75 @@
+## https://stackoverflow.com/a/34502363
+
+## Define base schema
+dn: cn=planetexpress, ou=schema
+objectclass: metaSchema
+objectclass: top
+cn: planetexpress
+
+dn: ou=attributetypes, cn=planetexpress, ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: attributetypes
+
+## Add sAMAccountName
+dn: m-oid=1.2.840.113556.1.4.221, ou=attributetypes, cn=planetexpress, ou=schema
+objectclass: metaAttributeType
+objectclass: metaTop
+objectclass: top
+m-oid: 1.2.840.113556.1.4.221
+m-name: sAMAccountName
+m-equality: caseIgnoreMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+m-singleValue: TRUE
+
+## Add memberOf
+dn: m-oid=1.2.840.113556.1.4.222, ou=attributetypes, cn=planetexpress, ou=schema
+objectclass: metaAttributeType
+objectclass: metaTop
+objectclass: top
+m-oid: 1.2.840.113556.1.4.222
+m-name: memberOf
+m-equality: caseIgnoreMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+m-singleValue: FALSE
+
+dn: ou=objectclasses, cn=planetexpress, ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: objectClasses
+
+dn: m-oid=1.2.840.113556.1.5.6, ou=objectclasses, cn=planetexpress, ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.2.840.113556.1.5.6
+m-name: simulatedMicrosoftSecurityPrincipal
+m-supObjectClass: top
+m-typeObjectClass: AUXILIARY
+m-must: sAMAccountName
+m-may: memberOf
+
+### Add the groupType Attribute
+dn: m-oid=1.2.840.113556.1.4.750, ou=attributetypes, cn=planetexpress, ou=schema
+objectclass: metaAttributeType
+objectclass: metaTop
+objectclass: top
+m-oid: 1.2.840.113556.1.4.750
+m-name: groupType
+m-equality: caseIgnoreMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.27
+m-singleValue: TRUE
+
+### Add the group class
+dn: m-oid= 1.2.840.113556.1.5.8, ou=objectclasses, cn=planetexpress, ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid:  1.2.840.113556.1.5.8
+m-description: A group of users
+m-name: Group
+m-supObjectClass: top
+m-typeObjectClass: STRUCTURAL
+m-must: groupType
+m-must: cn
+m-may: member

@@ -1,0 +1,26 @@
+# Must be 11 or less because of https://issues.apache.org/jira/browse/DIRSTUDIO-1277
+FROM openjdk:11-jre-slim
+
+WORKDIR /opt
+
+COPY packages/apacheds.deb .
+COPY bootstrap bootstrap
+COPY tools/import-ldif.sh /usr/local/bin/import-ldif
+COPY tools/ldap-ready.sh /usr/local/bin/ldap-ready
+
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends ldap-utils procps && \
+  rm -rf /var/lib/apt/lists/* && \
+  dpkg -i apacheds.deb && \
+  rm -f apacheds.deb
+
+ENV LDAP_BINDDN=${LDAP_BINDDN:-"uid=admin,ou=system"}
+ENV LDAP_SECRET=${LDAP_SECRET:-"secret"}
+ENV APACHEDS_VERSION=${APACHEDS_VERSION:-"2.0.0.AM26"}
+ENV APACHEDS_INSTANCE_DIR=/var/lib/apacheds-${APACHEDS_VERSION}/default
+
+ENV PATH=/opt/apacheds-${APACHEDS_VERSION}/bin:${PATH}
+
+EXPOSE 10389 10636
+
+ENTRYPOINT ["/opt/bootstrap/bootstrap.sh"]

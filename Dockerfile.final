@@ -1,0 +1,34 @@
+# Based upon:
+# https://github.com/OpenIdentityPlatform/OpenDJ/blob/825e1d6/opendj-packages/opendj-docker/Dockerfile
+
+# Must be 11 or less because of https://issues.apache.org/jira/browse/DIRSTUDIO-1277
+FROM openjdk:11-jre-slim
+
+WORKDIR /tmp
+
+COPY packages/apacheds.deb .
+COPY packages/dumb-init /usr/local/bin/dumb-init
+COPY build_out/data.tar .
+COPY tools/ldap-ready.sh /usr/local/bin/ldap-ready
+COPY run.sh /run.sh
+
+ENV LDAP_BINDDN=${LDAP_BINDDN:-"uid=admin,ou=system"}
+ENV LDAP_SECRET=${LDAP_SECRET:-"secret"}
+ENV APACHEDS_VERSION=${APACHEDS_VERSION:-"2.0.0.AM26"}
+ENV APACHEDS_INSTANCE=${APACHEDS_INSTANCE:-"default"}
+ENV APACHEDS_INSTANCE_DIR=/var/lib/apacheds-${APACHEDS_VERSION}/${APACHEDS_INSTANCE}
+
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends ldap-utils procps && \
+  rm -rf /var/lib/apt/lists/* && \
+  dpkg -i apacheds.deb && \
+  rm -f apacheds.deb && \
+  tar -xf data.tar -C /var/lib/apacheds-${APACHEDS_VERSION}/ && \
+  rm -f data.tar ${APACHEDS_INSTANCE_DIR}/conf/config.ldif
+
+ENV PATH=/opt/apacheds-${APACHEDS_VERSION}/bin:${PATH}
+
+EXPOSE 10389 10636
+
+WORKDIR /
+ENTRYPOINT ["/run.sh"]
