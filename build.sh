@@ -2,6 +2,16 @@
 
 export APACHEDS_VERSION=2.0.0.AM26
 
+# Define the remote Docker registry to push the final image to.
+DOCKER_REGISTRY=${DOCKER_REGISTRY:-'ghcr.io/ldapjs/docker-test-apacheds'}
+
+# Set to 1 to push the final image to the remote registry, e.g.:
+# `PUSH=1 ./build.sh`
+#
+# Remember to authenticate to the registry:
+# https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry
+PUSH=${PUSH:-0}
+
 # First input = local dest name
 # Second input = URL
 function downloadPackage() {
@@ -43,4 +53,11 @@ docker run --rm \
 
 docker build -t apacheds -f Dockerfile.final .
 
-# TODO: tag for GitHub registry and push to registry
+d=$(date +'%Y-%m-%d')
+docker tag apacheds ${DOCKER_REGISTRY}/apacheds:${d}
+docker tag apacheds ${DOCKER_REGISTRY}/apacheds:latest
+
+if [ ${PUSH} -eq 1 ]; then
+  docker push ${DOCKER_REGISTRY}/apacheds:${d}
+  docker push ${DOCKER_REGISTRY}/apacheds:latest
+fi
